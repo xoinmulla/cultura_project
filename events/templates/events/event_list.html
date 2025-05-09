@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Upcoming Events{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0 text-primary fw-bold">Upcoming Events</h1>
+        <a href="{% url 'events:event_create' %}" class="btn btn-success btn-lg shadow">
+            <i class="bi bi-plus-circle me-2"></i>Create New Event
+        </a>
+    </div>
+
+    <form action="{% url 'events:event_list' %}" method="get" class="mb-4 p-3 bg-light rounded shadow-sm d-flex align-items-center">
+        <div class="input-group me-3">
+            <input type="text" class="form-control" placeholder="Search events..." name="q" value="{{ request.GET.q }}">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+        <a href="{% url 'events:event_list' %}" class="btn btn-outline-secondary">Clear Search</a>
+    </form>
+
+    {% if events %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for event in events %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 hover-shadow-lg transition">
+                        {% if event.image %}
+                            <a href="{{ event.get_absolute_url }}">
+                                <img src="{{ event.image.url }}" class="card-img-top img-fluid rounded-top" alt="{{ event.name }}" style="height: 200px; object-fit: cover;">
+                            </a>
+                        {% else %}
+                            <img src="{% static 'img/placeholder_event.jpg' %}" class="card-img-top img-fluid rounded-top" alt="Placeholder Event Image" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-bold mb-2">
+                                <a href="{{ event.get_absolute_url }}" class="text-decoration-none text-dark hover-primary">
+                                    {{ event.name }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted mb-2 small">
+                                <i class="bi bi-calendar-event me-1 text-info"></i> {{ event.start_datetime|date:"D, d M Y" }}
+                                {% if event.end_datetime and event.end_datetime.date != event.start_datetime.date %}
+                                    - {{ event.end_datetime|date:"D, d M Y" }}
+                                {% endif %}
+                            </p>
+                            <p class="card-text text-muted mb-2 small">
+                                <i class="bi bi-clock me-1 text-info"></i> {{ event.start_datetime|date:"P" }}
+                                {% if event.end_datetime %}
+                                    - {{ event.end_datetime|date:"P" }}
+                                {% endif %}
+                            </p>
+                            <p class="card-text text-muted mb-3 small">
+                                <i class="bi bi-geo-alt-fill me-1 text-secondary"></i> {{ event.venue }}
+                            </p>
+                            <p class="card-text flex-grow-1">{{ event.description|truncatewords:20 }}</p>
+                            <div class="mt-auto text-center"> <a href="{{ event.get_absolute_url }}" class="btn btn-primary btn-sm mt-3">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                    {% endif %}
+
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            <h4 class="alert-heading">No events found!</h4>
+            <p>It looks like there are no cultural events scheduled yet. Why not be the first to share one?</p>
+            <hr>
+            <p class="mb-0"><a href="{% url 'events:event_create' %}" class="alert-link">Create a new event now!</a></p>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* Custom styles for card hover effect */
+        .card.hover-shadow-lg:hover {
+            transform: translateY(-5px); /* Lifts the card slightly */
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important; /* Stronger shadow on hover */
+        }
+        .card.transition {
+            transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+        }
+        .card-img-top {
+            height: 200px; /* Fixed height for all images */
+            object-fit: cover; /* Ensures images cover the area without distortion */
+        }
+        .text-decoration-none.hover-primary:hover {
+            color: var(--bs-primary) !important; /* Bootstrap primary color */
+        }
+    </style>
+{% endblock %}

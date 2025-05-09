@@ -1,0 +1,31 @@
+{% extends "experiences/base.html" %}
+
+{% block title %}Experiences in {{ category.name }}{% endblock %}
+
+{% block content %}
+    <h1>Experiences in {{ category.name }}</h1>
+
+    {% if experiences %}
+        {% for experience in experiences %}
+            <div class="experience-item">
+                {% if experience.image %}
+                    <a href="{{ experience.get_absolute_url }}">
+                        <img src="{{ experience.image.url }}" alt="{{ experience.title }}">
+                    </a>
+                {% endif %}
+                <h2><a href="{{ experience.get_absolute_url }}">{{ experience.title }}</a></h2>
+                <p>{{ experience.description|truncatewords:30 }}</p>
+                <p><strong>Duration:</strong> {{ experience.duration_hours }} hours</p>
+                {% if experience.price %}
+                    <p><strong>Price:</strong> ${{ experience.price }}</p>
+                {% else %}
+                    <p><strong>Price:</strong> Contact for price</p>
+                {% endif %}
+                <a href="{{ experience.get_absolute_url }}">View Details</a>
+                <div style="clear: both;"></div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No experiences available in this category at the moment.</p>
+    {% endif %}
+{% endblock %}

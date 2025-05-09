@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Experiences Site{% endblock %}</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav ul { list-style-type: none; padding: 0; text-align: center; }
+        nav ul li { display: inline; margin-right: 20px; }
+        nav a { color: #333; text-decoration: none; font-weight: bold; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 960px; margin: 20px auto; padding: 20px; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .experience-item { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .experience-item:last-child { border-bottom: none; }
+        .experience-item img { max-width: 200px; height: auto; float: left; margin-right: 15px; border-radius: 5px; }
+        .experience-item h2 { margin-top: 0; }
+        .experience-item .category { font-size: 0.9em; color: #555; }
+        .experience-detail img { max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 15px; }
+        footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 0.9em; color: #777;}
+        .sidebar { float: left; width: 200px; margin-right: 20px; }
+        .content { overflow: hidden; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'experiences:experience_list' %}" style="color: white; text-decoration: none;">Our Experiences</a></h1>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Categories</h3>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'experiences:experience_list' %}">All Experiences</a></li>
+                    {% for cat in categories %}
+                        <li><a href="{% url 'experiences:experience_category' cat.slug %}">{{ cat.name }}</a></li>
+                    {% empty %}
+                        <li>No categories yet.</li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </aside>
+        <main class="content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; {% now "Y" %} Your Company Name. All rights reserved.</p>
+    </footer>
+</body>
+</html>

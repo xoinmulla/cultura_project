@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Welcome - CulturaConnect{% endblock %}
+
+{% block content %}
+
+    <div class="p-5 text-center bg-image rounded-3 shadow-sm"
+        style=" background-image: url(https://i.pinimg.com/736x/54/63/32/54633221a4bcd3f5b8178ce5306d6e07.jpg);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.5); border-radius: 10px; width: 700px; height: 400px;"> <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="text-white">
+                    <h1 class="mb-3 display-4 fw-bold text-white">Explore the Karnataka's Cultures</h1>
+                    <p class="lead mb-4">Discover unique destinations, vibrant events, and unforgettable experiences.</p>
+                    {% if not user.is_authenticated %}
+                        <a class="btn btn-primary btn-lg me-2 shadow" href="{% url 'register' %}" role="button">Join CulturaConnect</a>
+                        <a class="btn btn-outline-light btn-lg shadow" href="{% url 'login' %}" role="button">Login</a>
+                    {% else %}
+                        <p class="lead mb-4">Welcome back, {{ user.username }}! Start your next cultural adventure.</p>
+                        <a class="btn btn-primary btn-lg me-2 shadow" href="{% url 'destination_list' %}" role="button">Find Destinations</a>
+                        <a class="btn btn-outline-light btn-lg shadow" href="{% url 'experiences:experience_list' %}" role="button">Browse Experiences</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <h2 class="text-center mb-5 fw-bold text-primary">What You Can Do</h2>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 text-center">
+                    <img src="https://i.pinimg.com/736x/f8/3a/7d/f83a7d01f44af5fd2efc22867b5cfcdb.jpg" class="card-img-top rounded-top" alt="Historic building">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark">Discover Destinations</h5>
+                        <p class="card-text text-muted">Explore thousands of cultural landmarks, historic sites, and beautiful cities worldwide.</p>
+                        <div class="mt-auto"> <a href="{% url 'destination_list' %}" class="btn btn-outline-info mt-3">View Destinations</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 text-center">
+                    <img src="https://i.pinimg.com/736x/5d/0f/59/5d0f5905a3f03c3e0dfd143ced1a8273.jpg" class="card-img-top rounded-top" alt="Cultural festival">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark">Attend Cultural Events</h5>
+                        <p class="card-text text-muted">Find and join local festivals, exhibitions, concerts, and workshops happening near you or abroad.</p>
+                        <div class="mt-auto">
+                            <a href="{% url 'events:event_list' %}" class="btn btn-outline-success mt-3">Find Events</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 text-center">
+                    <img src="https://i.pinimg.com/736x/36/f9/c6/36f9c6e9b15c1104375ee7aef7c5ec81.jpg" class="card-img-top rounded-top" alt="Local experience">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark">Immersive Experiences</h5>
+                        <p class="card-text text-muted">Book unique cultural experiences like cooking classes, traditional crafts, guided tours, and more.</p>
+                        <div class="mt-auto">
+                            <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-warning mt-3">Explore Experiences</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="container my-5 p-5 bg-dark text-white rounded shadow-lg text-center">
+        <h2 class="mb-4 fw-bold">Ready to Connect?</h2>
+        <p class="lead mb-4">Join CulturaConnect today to unlock a world of cultural discovery and adventure.</p>
+        <a class="btn btn-light btn-lg me-3 shadow" href="{% url 'register' %}">Sign Up Now</a>
+        <a class="btn btn-outline-light btn-lg shadow" href="{% url 'login' %}">Already a Member? Login</a>
+    </div>
+    {% endif %}
+
+{% endblock %}

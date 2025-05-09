@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cultura Project{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 20px; }
+        .container { max-width: 960px; }
+        nav a { margin-right: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="mb-4">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Home</a> {# Assuming you have a 'home' url #}
+            <a href="{% url 'events:event_list' %}" class="btn btn-info">Events</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'events:event_create' %}" class="btn btn-primary">Create Event</a>
+                <span>Hello, {{ user.username }}!</span>
+                <a href="{% url 'logout' %}" class="btn btn-outline-secondary">Logout</a> {# Assuming you have 'logout' url #}
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a> {# Assuming you have 'login' url #}
+                <a href="{% url 'register' %}" class="btn btn-outline-success">Register</a> {# Assuming you have 'register' url #}
+            {% endif %}
+        </nav>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

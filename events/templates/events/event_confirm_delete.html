@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Delete: {{ event.name }}{% endblock %}
+
+{% block content %}
+    <div class="card p-4 shadow-sm border-0">
+        <div class="card-body text-center">
+            <h1 class="card-title mb-4 text-danger fw-bold">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Deletion
+            </h1>
+            
+            <div class="alert alert-danger fade show d-flex align-items-center justify-content-center" role="alert">
+                <i class="bi bi-info-circle-fill me-2 fs-4"></i> <div>
+                    Are you sure you want to delete the event: <strong>"{{ event.name }}"</strong>?
+                </div>
+            </div>
+
+            <p class="lead mt-3 text-muted">This action cannot be undone.</p>
+
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <button type="submit" class="btn btn-danger btn-lg shadow">
+                        <i class="bi bi-trash-fill me-2"></i>Yes, Delete Permanently
+                    </button>
+                    <a href="{{ event.get_absolute_url }}" class="btn btn-secondary btn-lg shadow">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            font-size: 1.25rem; /* Larger text for alert */
+        }
+    </style>
+{% endblock %}

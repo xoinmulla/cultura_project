@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ event.name }} - CulturaConnect Events{% endblock %}
+
+{% block content %}
+
+    <div class="mb-5 rounded-3 overflow-hidden shadow-sm" style="max-height: 450px;">
+        {% if event.image %}
+            <img src="{{ event.image.url }}" class="img-fluid w-100 h-100 object-fit-cover" alt="{{ event.name }}">
+        {% else %}
+            <img src="{% static 'img/placeholder_detail_event.jpg' %}" class="img-fluid w-100 h-100 object-fit-cover" alt="Placeholder Event Image">
+        {% endif %}
+    </div>
+
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h1 class="mb-2 display-4 fw-bold text-primary">{{ event.name }}</h1>
+            <p class="lead text-muted mb-0">
+                <i class="bi bi-geo-alt-fill me-2 text-secondary"></i>{{ event.venue }}
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="{% url 'events:event_list' %}" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="bi bi-arrow-left me-2"></i>Back to Events
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body">
+                    <h3 class="card-title fw-bold mb-3 text-dark">About This Event</h3>
+                    <p class="card-text">{{ event.description|linebreaksbr }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body">
+                    <h4 class="card-title fw-bold mb-3 text-dark">Organizer Information</h4>
+                    <p class="card-text">
+                        <strong><i class="bi bi-person-fill me-2 text-info"></i>Organized by:</strong> {{ event.organizer|default:"Not specified" }}
+                    </p>
+                    {% comment %} Add more organizer details here if available in your model, e.g., contact info, website {% endcomment %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4 border-0 bg-light">
+                <div class="card-body">
+                    <h4 class="card-title fw-bold mb-3 text-dark">Event Details</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <strong><i class="bi bi-calendar-event me-2 text-success"></i>Starts:</strong> {{ event.start_datetime|date:"F j, Y" }} at {{ event.start_datetime|date:"P" }}
+                        </li>
+                        {% if event.end_datetime %}
+                            <li class="mb-2">
+                                <strong><i class="bi bi-calendar-x me-2 text-danger"></i>Ends:</strong> {{ event.end_datetime|date:"F j, Y" }} at {{ event.end_datetime|date:"P" }}
+                            </li>
+                        {% endif %}
+                        <li class="mb-2">
+                            <strong><i class="bi bi-pin-map-fill me-2 text-primary"></i>Location:</strong> {{ event.venue }}
+                        </li>
+                        {% comment %}
+                        <li><strong><i class="bi bi-tag-fill me-2 text-secondary"></i>Category:</strong> {{ event.category }}</li>
+                        <li><strong><i class="bi bi-cash-coin me-2 text-warning"></i>Price:</strong> {% if event.price %}${{ event.price }}{% else %}Free{% endif %}</li>
+                        {% endcomment %}
+                        <li class="mt-3">
+                            <small class="text-muted">Make sure to check the event details for any updates.</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 pt-3 border-top d-flex flex-wrap justify-content-end gap-2">
+        {% comment %} Refine user permissions check as needed (e.g., if user is event organizer or staff) {% endcomment %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'events:event_update' pk=event.pk %}" class="btn btn-warning btn-lg shadow-sm">
+                <i class="bi bi-pencil-square me-2"></i>Edit Event
+            </a>
+            <a href="{% url 'events:event_delete' pk=event.pk %}" class="btn btn-danger btn-lg shadow-sm">
+                <i class="bi bi-trash-fill me-2"></i>Delete Event
+            </a>
+        {% endif %}
+    </div>
+    
+    <div class="text-muted text-end mt-3 small">
+        <p class="mb-0">Event posted on: {{ event.created_at|date:"F j, Y" }}</p>
+        <p class="mb-0">Last updated: {{ event.updated_at|date:"F j, Y" }}</p>
+    </div>
+
+{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* Ensure images cover their container */
+        .object-fit-cover {
+            object-fit: cover;
+        }
+    </style>
+{% endblock %}
